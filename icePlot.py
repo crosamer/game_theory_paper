@@ -1,6 +1,3 @@
-# =============================
-# 1. Import Library
-# =============================
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -16,17 +13,12 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.inspection import PartialDependenceDisplay
 
 
-# =============================
-# 2. Load Dataset Kaggle
-# =============================
+# Load Dataset Kaggle
 
 df = pd.read_csv("housing.csv")
 print(df.head())
 
-
-# =============================
-# 3. Preprocessing
-# =============================
+# Preprocessing
 
 # Fitur input & target
 X = df.drop("median_house_value", axis=1)
@@ -42,18 +34,13 @@ preprocessor = ColumnTransformer([
 ], remainder="passthrough")
 
 
-# =============================
-# 4. Split Dataset
-# =============================
+# Split Dataset
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
 
-
-# =============================
-# 5. Baseline Models
-# =============================
+# Baseline Models
 
 # Model 1: Linear Regression
 model_lr = Pipeline([
@@ -71,18 +58,12 @@ model_rf = Pipeline([
 model_lr.fit(X_train, y_train)
 model_rf.fit(X_train, y_train)
 
-
-# =============================
-# 6. Memilih Fitur Penting untuk ICE
-#    (gunakan fitur paling relevan di literatur)
-# =============================
+# Memilih Fitur Penting untuk ICE
 
 selected_features = ["median_income", "households", "housing_median_age"]
 
 
-# =============================
-# 7. ICE Plot — Linear Regression
-# =============================
+# ICE Plot — Linear Regression
 
 print("Membuat ICE untuk Linear Regression...")
 
@@ -90,18 +71,22 @@ fig_lr = PartialDependenceDisplay.from_estimator(
     model_lr,
     X_train,
     features=selected_features,
-    kind="individual",      # ICE
+    kind="individual",
     subsample=150,
     grid_resolution=20
 )
-plt.suptitle("ICE Plot — Linear Regression (Kaggle California Housing)")
+
+plt.suptitle("ICE Plot — Linear Regression")
 plt.tight_layout()
+
+# *** Set batas Y agar konsisten ***
+for ax in fig_lr.axes_.flat:
+    ax.set_ylim(0, 500000)
+
 plt.show()
 
 
-# =============================
-# 8. ICE Plot — Random Forest
-# =============================
+# ICE Plot — Random Forest
 
 print("Membuat ICE untuk Random Forest...")
 
@@ -109,10 +94,16 @@ fig_rf = PartialDependenceDisplay.from_estimator(
     model_rf,
     X_train,
     features=selected_features,
-    kind="individual",      # ICE
+    kind="individual",
     subsample=150,
     grid_resolution=20
 )
-plt.suptitle("ICE Plot — Random Forest (Kaggle California Housing)")
+
+plt.suptitle("ICE Plot — Random Forest")
 plt.tight_layout()
+
+# *** Samakan batas Y ***
+for ax in fig_rf.axes_.flat:
+    ax.set_ylim(0, 500000)
+
 plt.show()
