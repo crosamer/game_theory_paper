@@ -107,3 +107,43 @@ for ax in fig_rf.axes_.flat:
     ax.set_ylim(0, 500000)
 
 plt.show()
+
+
+# PDP Plot — Linear Regression
+print("Membuat PDP untuk Linear Regression...")
+
+fig_lr_pdp = PartialDependenceDisplay.from_estimator(
+    model_lr,
+    X_train,
+    features=selected_features,
+    kind="average",
+    grid_resolution=20
+)
+
+plt.suptitle("PDP Plot — Linear Regression")
+plt.tight_layout()
+
+for ax in fig_lr_pdp.axes_.flat:
+    ax.set_ylim(0, 500000)
+
+plt.show()
+
+
+# PDP Plot — Random Forest
+print("Membuat PDP untuk Random Forest...")
+
+fig_rf_pdp = PartialDependenceDisplay.from_estimator(
+    model_rf,
+    X_train,
+    features=selected_features,
+    kind="average",
+    grid_resolution=20
+)
+
+plt.suptitle("PDP Plot — Random Forest")
+plt.tight_layout()
+
+for ax in fig_rf_pdp.axes_.flat:
+    ax.set_ylim(0, 500000)
+
+plt.show()
